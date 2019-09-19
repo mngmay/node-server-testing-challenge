@@ -33,7 +33,6 @@ describe("breads.js", () => {
   describe("POST /breads", () => {
     it("should add a new bread, 'Pizza Crust'", async () => {
       const id = await Breads.add({ name: "Pizza Crust" });
-      console.log(id);
       let bread = await db("breads")
         .where(id)
         .first();
@@ -50,6 +49,17 @@ describe("breads.js", () => {
       const res = await request(server).get("/breads");
 
       expect(res.body.length).toEqual(3);
+    });
+
+    it("returns status 200", () => {
+      const pizza = { name: "Pizza Crust" };
+      console.log("pizza", pizza);
+      return request(server)
+        .post("/breads")
+        .send(pizza)
+        .then(res => {
+          expect(res.status).toBe(200);
+        });
     });
   });
 
@@ -78,7 +88,6 @@ describe("breads.js", () => {
       expect(breads.body.length).toEqual(1);
 
       await Breads.removeById(bread.id);
-      console.log(bread.id);
 
       breads = await request(server).get("/breads");
 
